@@ -80,7 +80,8 @@
                         <td>${d.precio}</td>
                         <td>
                             <button class="btn btn-warning" onclick='preEdit("${d.nombre}","${d.precio}")' data-toggle="modal" data-target="#exampleModal">Editar</button>
-                            <button class="btn btn-danger" onclick='eliminar("${d.nombre}")'>Eliminar</button>
+                            <button class="btn btn-danger" onclick='eliminar("${d.id}")'>Eliminar</button>
+
                         </td>
                     </tr>
                 `);
@@ -118,11 +119,12 @@
       $('#exampleModal').modal('hide')
     }
 
-    function eliminar(nombre) {
-      axios.get(`/eliminarNombre=${nombre}`).then((data) => {
-        alert(data.data)
-        getData()
-      })
+    function eliminar(id) {
+      axios.delete(`/eliminar/${id}`)
+        .then((response) => {
+          alert(response.data.message);
+          getData();
+        })
       $('#exampleModal').modal('hide')
     }
   </script>

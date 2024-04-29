@@ -66,6 +66,33 @@ app.get("/deportes", async (req, res) => {
     }
 });
 
+
+// update: 
+
+
+// delete:
+app.delete("/eliminar/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const stringDeportes = await readFile(pathFile, 'utf8');
+        const deportesArray = JSON.parse(stringDeportes);
+
+        const deporteIndex = deportesArray.findIndex(item => item.id === id);
+        if (deporteIndex === -1) {
+            return res.status(404).json({ ok: false, message: "Deporte no encontrado" });
+        }
+
+        deportesArray.splice(deporteIndex, 1);
+
+        await writeFile(pathFile, JSON.stringify(deportesArray));
+        return res.json({ ok: true, message: "Deporte eliminado correctamente" });
+    } catch (error) {
+        console.error('Error al eliminar deporte:', error);
+        return res.status(500).json({ ok: false, message: "Error interno del servidor" });
+    }
+});
+
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log("Servidor escuchando en el puerto", PORT)
