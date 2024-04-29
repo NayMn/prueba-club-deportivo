@@ -25,6 +25,7 @@
 
 <body>
 
+
   <div class="container">
 
     <h1>Deportes</h1>
@@ -67,24 +68,29 @@
     })
 
     function getData() {
-      $('#cuerpo').html('')
-      axios.get('/deportes').then((data) => {
-        let deportes = data.data.deportes
-        deportes.forEach((d, i) => {
-          $('#cuerpo').append(`
-          <tr>
-            <th scope="row">${i + 1}</th>
-            <td>${d.nombre}</td>
-            <td>${d.precio}</td>
-            <td>
-              <button class="btn btn-warning" onclick='preEdit("${d.nombre}","${d.precio
-            }")' data-toggle="modal" data-target="#exampleModal">Editar</button>
-              <button class="btn btn-danger" onclick='eliminar("${d.nombre}")'>Eliminar</button>
-            </td>
-          </tr>
-          `)
-        })
-      })
+      $('#cuerpo').html('');
+      axios.get('/deportes').then((response) => {
+        const deportes = response.data;
+        if (deportes && deportes.length > 0) {
+          deportes.forEach((d, i) => {
+            $('#cuerpo').append(`
+                    <tr>
+                        <th scope="row">${i + 1}</th>
+                        <td>${d.nombre}</td>
+                        <td>${d.precio}</td>
+                        <td>
+                            <button class="btn btn-warning" onclick='preEdit("${d.nombre}","${d.precio}")' data-toggle="modal" data-target="#exampleModal">Editar</button>
+                            <button class="btn btn-danger" onclick='eliminar("${d.nombre}")'>Eliminar</button>
+                        </td>
+                    </tr>
+                `);
+          });
+        } else {
+          $('#cuerpo').append('<tr><td colspan="4">No hay deportes registrados</td></tr>');
+        }
+      }).catch((error) => {
+        console.error('Error al obtener los datos de deportes:', error);
+      });
     }
 
     function preEdit(nombre, precio) {
@@ -95,7 +101,7 @@
     function agregar() {
       let nombre = $('#nombre').val()
       let precio = $('#precio').val()
-      axios.get(`/agregarNombre=${nombre}&precio=${precio}`).then((data) => {
+      axios.post(`/agregar`, { nombre: nombre, precio: precio }).then((data) => {
         alert(data.data)
         getData()
       })
