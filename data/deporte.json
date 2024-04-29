@@ -1,1 +1,12 @@
-[{"nombre":"deporte prueba","precio":"precio prueba","id":"123"},{"nombre":"futbol","precio":"5265","id":"_viAcdz2p2SSmqbHkMofL"}]
+[
+    {
+        "nombre": "deporte prueba",
+        "precio": "precio prueba",
+        "id": "123"
+    },
+    {
+        "nombre": "nombreuno",
+        "precio": "52",
+        "id": "JDLvzC5EBOdqG8cnpj222"
+    }
+]

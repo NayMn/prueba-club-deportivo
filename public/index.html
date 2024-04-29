@@ -81,7 +81,7 @@
                         <td>
                             <button class="btn btn-warning" onclick='preEdit("${d.nombre}","${d.precio}")' data-toggle="modal" data-target="#exampleModal">Editar</button>
                             <button class="btn btn-danger" onclick='eliminar("${d.id}")'>Eliminar</button>
-
+  
                         </td>
                     </tr>
                 `);
@@ -112,7 +112,7 @@
     function edit() {
       let nombre = $('#nombreModal').val()
       let precio = $('#precioModal').val()
-      axios.get(`/editarNombre=${nombre}&precio=${precio}`).then((data) => {
+      axios.get(`/editar?nombre=${nombre}&precio=${precio}`).then((data) => {
         alert(data.data)
         getData()
       })
@@ -155,14 +155,3 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-</body>
-
-</html>

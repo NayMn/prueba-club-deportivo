@@ -8,7 +8,7 @@ const app = express()
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pathFile = __dirname + "/data/deporte.json";
 
-// middleware: para que la info no sea undefined habilitar req.body
+// middleware: 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -16,9 +16,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'));
 
 // CRUD:
-
 // crear un deporte nuevo: 
-
 app.post("/agregar", async (req, res) => {
     try {
 
@@ -30,13 +28,13 @@ app.post("/agregar", async (req, res) => {
             id: nanoid()
         }
 
-        // guardar en json:  leer info, empujar y guardar info 
+        // guardar en json,  leer info:
         const stringDeportes = await readFile(pathFile, 'utf8');
         const deportesArray = JSON.parse(stringDeportes);
 
-        // empujar
+        // empujar info:
         deportesArray.push(newDeporte)
-        // guardar 
+        // guardar info:
         await writeFile(pathFile, JSON.stringify(deportesArray))
 
         return res.json({ ok: deportesArray })
@@ -66,8 +64,31 @@ app.get("/deportes", async (req, res) => {
     }
 });
 
-
 // update: 
+app.get("/editar", async (req, res) => {
+    try {
+        const nombre = req.query.nombre;
+        const nuevoPrecio = req.query.precio;
+
+        const stringDeportes = await readFile(pathFile, 'utf8');
+        const deportesArray = JSON.parse(stringDeportes);
+
+        const deporteIndex = deportesArray.findIndex(item => item.nombre === nombre);
+        if (deporteIndex === -1) {
+            return res.status(404).json({ ok: false, message: "Deporte no encontrado" });
+        }
+
+        // Actualizar el precio del deporte
+        deportesArray[deporteIndex].precio = nuevoPrecio;
+
+        await writeFile(pathFile, JSON.stringify(deportesArray));
+        return res.json({ ok: true, message: "Precio del deporte actualizado correctamente" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: false });
+    }
+});
+
 
 
 // delete:
@@ -87,10 +108,11 @@ app.delete("/eliminar/:id", async (req, res) => {
         await writeFile(pathFile, JSON.stringify(deportesArray));
         return res.json({ ok: true, message: "Deporte eliminado correctamente" });
     } catch (error) {
-        console.error('Error al eliminar deporte:', error);
-        return res.status(500).json({ ok: false, message: "Error interno del servidor" });
+        console.log(error);
+        return res.status(500).json({ ok: false });
     }
 });
+
 
 
 const PORT = process.env.PORT || 5001;
